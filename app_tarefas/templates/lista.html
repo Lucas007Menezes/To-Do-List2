@@ -1,0 +1,15 @@
+<h1>Aplicativo de Tarefas</h1>
+<hr>
+
+<ul>
+    {% for item in tarefas %}
+    <li>
+        <strong>{{ item.titulo }}</strong>
+    {% if item.concluida %}
+        <span style="color: green;">{Concluída}</span>
+    {% else %}
+        <span style="color: red">{Pendente}</span>
+    {% endif %}
+    </li>
+    {% endfor %}
+</ul>

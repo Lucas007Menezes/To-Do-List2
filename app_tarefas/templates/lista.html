@@ -1,15 +1,161 @@
-<h1>Aplicativo de Tarefas</h1>
-<hr>
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aplicativo de Tarefas</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f7f6;
+            color: #333;
+            max-width: 600px;
+            margin: 40px auto;
+            padding: 30px;
+            background: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-top: 0;
+        }
+        hr {
+            border: 0;
+            height: 1px;
+            background: #eef2f5;
+            margin-bottom: 25px;
+        }
+        form {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+        }
+        input[type="text"] {
+            flex: 1;
+            padding: 12px 15px;
+            border: 1px solid #dce4ec;
+            border-radius: 6px;
+            font-size: 16px;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+        input[type="text"]:focus {
+            border-color: #3498db;
+        }
+        button {
+            padding: 12px 20px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: background 0.2s;
+        }
+        button:hover {
+            background-color: #2980b9;
+        }
+        ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        li {
+            background: #fdfdfd;
+            margin-bottom: 12px;
+            padding: 15px 20px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border: 1px solid #eef2f5;
+            border-left: 5px solid #3498db;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        li:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.03);
+        }
+        li.concluida {
+            border-left-color: #2ecc71;
+            opacity: 0.8;
+        }
+        .task-content {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex: 1;
+        }
+        .task-title {
+            font-size: 16px;
+        }
+        li.concluida .task-title {
+            text-decoration: line-through;
+            color: #7f8c8d;
+        }
+        .status-badge {
+            font-size: 11px;
+            padding: 4px 8px;
+            border-radius: 12px;
+            color: white;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+        .status-concluida { background-color: #2ecc71; }
+        .status-pendente { background-color: #f39c12; }
+        .actions {
+            display: flex;
+            gap: 8px;
+        }
+        a {
+            text-decoration: none;
+            padding: 6px 12px;
+            border-radius: 5px;
+            font-size: 14px;
+            color: white;
+            transition: opacity 0.2s;
+            font-weight: 500;
+        }
+        a:hover { opacity: 0.85; }
+        .btn-concluir { background-color: #2ecc71; }
+        .btn-deletar { background-color: #e74c3c; }
+    </style>
+</head>
+<body>
 
-<ul>
-    {% for item in tarefas %}
-    <li>
-        <strong>{{ item.titulo }}</strong>
-    {% if item.concluida %}
-        <span style="color: green;">{Concluída}</span>
-    {% else %}
-        <span style="color: red">{Pendente}</span>
-    {% endif %}
-    </li>
-    {% endfor %}
-</ul>
+    <h1>Aplicativo de Tarefas</h1>
+    <hr>
+
+    <form method="POST">
+        {% csrf_token %}
+        <input type="text" name="novo_titulo" placeholder="O que você precisa fazer?" required>
+        <button type="submit">Adicionar</button>
+    </form>
+
+    <ul>
+        {% for item in tarefas %}
+        <li class="{% if item.concluida %}concluida{% endif %}">
+            <div class="task-content">
+                <strong class="task-title">{{ item.titulo }}</strong>
+                {% if item.concluida %}
+                    <span class="status-badge status-concluida">Concluída</span>
+                {% else %}
+                    <span class="status-badge status-pendente">Pendente</span>
+                {% endif %}
+            </div>
+            
+            <div class="actions">
+                {% if not item.concluida %}
+                    <a href="/concluir/{{ item.id }}/" class="btn-concluir">Concluir</a>
+                {% endif %}
+                <a href="/deletar/{{ item.id }}/" class="btn-deletar">Deletar</a>
+            </div>
+        </li>
+        {% endfor %}
+    </ul>
+
+</body>
+</html>
